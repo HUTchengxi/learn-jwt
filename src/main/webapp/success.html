@@ -1,0 +1,41 @@
+<!Doctype html>
+<html>
+
+<head>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+
+<body>
+<table>
+    <thead>
+    <tr>
+        <td>token_header</td>
+        <td>token_payLoader</td>
+        <td>token_signature</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="t_header"></td>
+        <td class="t_payLoader"></td>
+        <td class="t_signature"></td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            type: "post",
+            cache: false,
+            url: "/checkToken",
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

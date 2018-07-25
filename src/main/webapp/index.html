@@ -1,0 +1,92 @@
+<!Doctype html>
+<html>
+
+<head>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+</head>
+
+<body>
+<form action=":;" method="post">
+    <input name="login_name" type="text"/>
+    <input name="login_pass" type="password"/>
+    <button type="button">login</button>
+</form>
+
+<script>
+    //当页面载入成功后再运行函数
+    $(document).ready(function () {
+
+        //登录模块
+        var loginModule = new Object({
+
+            _loginUrl: "/login",
+
+            _loginName: "",
+
+            _loginPass: "",
+
+            loginSetVal: function () {
+
+                _loginName = $("input[type='text']").val;
+                _loginPass = $("input[type='password']").val;
+            },
+
+            asyncLogin: function () {
+
+                loginSetVal();
+
+                $.ajax({
+                    cache: false,
+                    type: "post",
+                    url: _loginUrl,
+                    data: {
+                        login_name: _loginName,
+                        login_pass: _loginPass
+                    },
+                    dataType: "json",
+                    success: loginSuccess(data)
+                });
+            },
+
+            loginSuccess: function (data) {
+
+                console.log(data);
+            }
+        });
+
+        $("button").click(function () {
+
+            var _loginUrl = "/login";
+            var _loginName = $("input[type='text']").val();
+            var _loginPass = $("input[type='password']").val();
+
+            $.ajax({
+                cache: false,
+                type: "post",
+                url: _loginUrl,
+                data: {
+                    login_name: _loginName,
+                    login_pass: _loginPass
+                },
+                dataType: "json",
+                success: function (data) {
+
+                    var status = data.status;
+                    if (status == 1) {
+
+                        //在前端将token保存到cookie中
+                        var token = data.token;
+                        $.cookie("token", token, {expires: 1});   //键名、键值、失效时间（单位为天）
+                        window.location = data.forwardUrl;
+                    }
+                    else{
+                        alert("这都登录失败，你也是牛逼");
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
